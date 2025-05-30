@@ -35,11 +35,13 @@ Esta es una aplicación básica creada con **Express.js** que servirá como base
 
 - [PosgreSQL](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads) (versión 16 o superior recomendada)
 - Para que la conexión funcione correctamente, se debe crear un .env con las siguientes variables de entorno
+    ```
     -DB_USER=postgres
     -DB_PASSWORD=tu_contraseña
     -DB_HOST=localhost
     -DB_PORT=5432
     -DB_NAME=nombre_de_la_base_de_datos
+    ```
 ---
 
 ## 🔧 Instalación
