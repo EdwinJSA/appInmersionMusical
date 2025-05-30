@@ -18,6 +18,7 @@ Esta es una aplicación básica creada con **Express.js** que servirá como base
 |    |    ├── controllers
 |    |    ├── models
 |    |    ├── routes
+|    |    ├── templates
 |    |    ├── app.js
 |    ├── .env
 |    ├── .gitignore
