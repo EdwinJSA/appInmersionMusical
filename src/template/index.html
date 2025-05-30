@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="shortcut icon" href="/logo.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/style.css">
+  <title>Inmersion Musical App</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+
+  <!-- Header -->
+  <header class="flex justify-between items-center bg-white px-4 py-3 shadow-md">
+    <div class="flex items-center">
+      <img src='https://i.postimg.cc/7ZSDpYW1/logo.png' alt="Logo" class="w-8 h-8">
+      <span class="ml-2 font-bold text-lg text-blue-900">Inmersion Musical</span>
+    </div>
+    <div class="flex gap-4">
+      <a href="#" class="text-gray-700 font-semibold px-3 py-1">Contáctanos</a>
+      <a href="/login" class="bg-indigo-200 text-blue-900 font-bold px-3 py-1 rounded-lg">Entrar</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative">
+    <div id="portadaSlider"></div>
+    <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-40 flex flex-col justify-center items-start px-4">
+      <h1 class="text-white text-2xl font-bold font-mono text-shadow">Aprende, imagina, y adora a Dios</h1>
+      <p class="text-white text-sm mt-1 font-mono text-shadow">La música es un don de Dios</p>
+    </div>
+  </section>
+
+  <!-- Descripción -->
+  <section class="px-4 py-4">
+    <h2 class="text-lg font-bold mb-2 text-blue-900">Descripción</h2>
+    <p class="text-gray-700 text-sm leading-relaxed font-mono">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel sapien non justo gravida aliquam. Quisque at mauris nec neque bibendum varius.
+    </p>
+  </section>
+
+  <!-- Ubicación -->
+  <section class="px-4 py-4">
+    <h2 class="text-lg font-bold mb-2 text-blue-900">Estamos Ubicados</h2>
+    <div class="flex flex-col md:flex-row gap-4">
+      <iframe src="https://www.google.com/maps/embed?pb=..." width="600" height="450" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="w-full md:w-1/2"></iframe>
+      <p class="text-gray-700 text-sm leading-relaxed font-mono">
+        <strong>Dirección:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </p>
+    </div>
+  </section>
+
+  <!-- Instrumentos -->
+  <section class="px-4 py-4">
+    <h2 class="text-lg font-bold mb-2 text-blue-900">Instrumentos</h2>
+    <div class="flex flex-wrap gap-2">
+      <span class="bg-blue-950 text-white px-3 py-1 rounded-lg font-mono"><i class="fa-solid fa-check"></i> Piano</span>
+      <span class="bg-blue-950 text-white px-3 py-1 rounded-lg font-mono"><i class="fa-solid fa-check"></i> Guitarra</span>
+      <span class="bg-blue-950 text-white px-3 py-1 rounded-lg font-mono"><i class="fa-solid fa-check"></i> Batería</span>
+      <span class="bg-blue-950 text-white px-3 py-1 rounded-lg font-mono"><i class="fa-solid fa-check"></i> Bajo</span>
+    </div>
+  </section>
+
+  <!-- Horarios -->
+  <section class="px-4 py-4">
+    <h2 class="text-lg font-bold mb-2 text-blue-900">Horarios</h2>
+    <ul class="text-gray-700 text-sm leading-relaxed font-mono">
+      <li>Lunes 8:00 am - 5:00 pm</li>
+      <li>Martes 8:00 am - 5:00 pm</li>
+      <li>Miércoles 8:00 am - 5:00 pm</li>
+      <li>Jueves 8:00 am - 5:00 pm</li>
+      <li>Viernes 8:00 am - 5:00 pm</li>
+    </ul>
+  </section>
+
+  <!-- Videos -->
+  <section class="px-4 py-4">
+    <h2 class="text-lg font-bold mb-4 text-blue-900 text-center">Videos Demostrativos</h2>
+    <div class="flex overflow-x-auto space-x-4 py-4">
+      <div class="flex-shrink-0 flex flex-col rounded w-80 bg-[#ffffff] shadow-xl">
+        <figure class="flex justify-center items-center overflow-hidden rounded-t">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </figure>
+        <div class="flex flex-col p-8">
+          <div class="text-lg font-bold text-center text-[#374151] pb-6 font-mono">Título de ejemplo</div>
+          <div class="text-base text-center text-[#374151] font-mono">Descripción de ejemplo para el video.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recursos -->
+  <section class="px-4 py-4">
+    <h2 class="text-lg font-bold mb-2">Recursos de Aprendizaje</h2>
+    <div class="flex flex-wrap gap-2">
+      <a class="bg-blue-950 text-white px-3 py-1 rounded-lg" href="/documentos/ejemplo.pdf" target="_blank">
+        <i class="fa-solid fa-download"></i> Documento de Ejemplo
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div class="flex flex-col w-full h-fit bg-[#001840] text-[#e5e7eb] px-4 sm:px-10 lg:px-32 py-10">
+    <div class="flex flex-col items-center lg:items-center gap-6">
+      <div class="flex items-center gap-4">
+        <img alt="Logo Preview" src='https://i.postimg.cc/7ZSDpYW1/logo.png' width="65">
+        <div class="text-3xl text-center font-bold">Inmersion Musical</div>
+      </div>
+      <div class="flex gap-4 justify-center">
+        <a href="#" aria-label="Twitter">...</a>
+        <a href="#" aria-label="YouTube">...</a>
+        <a href="#" aria-label="Facebook">...</a>
+      </div>
+    </div>
+    <div class="w-full border-t border-gray-500 my-5"></div>
+    <div class="text-center text-sm">© 2024 Horizonte S.A - All rights reserved.</div>
+  </div>
+
+</body>
+</html>
