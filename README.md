@@ -6,27 +6,37 @@ Esta es una aplicación básica creada con **Express.js** que servirá como base
 
 ## 📁 Estructura del proyecto
 
-appInmersionMusical/
-│
-├── node_modules/             # Módulos instalados con npm
-│
-├── public/                   # Archivos estáticos públicos
-│   ├── documents/            # Documentos como PDF, DOCX, etc.
-│   ├── images/               # Imágenes estáticas
-│   └── others/               # Otros recursos estáticos
-│
-├── src/                      # Código fuente de la aplicación
-│   ├── config/               # Configuración general (DB, variables, etc.)
-│   ├── controllers/          # Lógica de controladores (manejo de rutas)
-│   ├── models/               # Modelos de datos (sin ORM)
-│   ├── routes/               # Definición de rutas Express
-│   └── app.js                # Punto de entrada principal de la app
-│
-├── .env                      # Variables de entorno
-├── .gitignore                # Archivos ignorados por Git
-├── package-lock.json         # Registro exacto de dependencias
-├── package.json              # Configuración del proyecto y scripts
-└── README.md                 # Documentación del proyecto
+node_modules
+
+public
+
+    - documents
+
+    - images
+
+    - others
+
+src
+
+    - config
+
+    - controllers
+
+    - models
+
+    - routes
+
+app.js
+
+.env
+
+.gitignore
+
+package-lock.json
+
+package.json
+
+README.md
 
 
 ## 🚀 Requisitos previos
