@@ -6,37 +6,25 @@ Esta es una aplicación básica creada con **Express.js** que servirá como base
 
 ## 📁 Estructura del proyecto
 
-node_modules
-
-public
-
-    - documents
-
-    - images
-
-    - others
-
-src
-
-    - config
-
-    - controllers
-
-    - models
-
-    - routes
-
-app.js
-
-.env
-
-.gitignore
-
-package-lock.json
-
-package.json
-
-README.md
+```
+|APPINMERSIONMUSICAL
+|    ├──node_modules
+|    ├──public
+|    |    ├── documents
+|    |    ├── images
+|    |    ├── others
+|    ├──src
+|    |    ├── config
+|    |    ├── controllers
+|    |    ├── models
+|    |    ├── routes
+|    |    ├── app.js
+|    ├── .env
+|    ├── .gitignore
+|    ├── package-lock.json
+|    ├── package.json
+|    ├── README.md
+```
 
 
 ## 🚀 Requisitos previos
@@ -54,11 +42,13 @@ README.md
 
 ```bash
 npm install
+```
 
 4. Luego, ejecuta:
 
 ```bash
 npm start
+```
 
 5. Al final solo abre el enlace de localhost que te proporciona la terminal 'Server is running on http://localhost:3000'
 
