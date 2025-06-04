@@ -14,12 +14,11 @@ Esta es una aplicación básica creada con **Express.js** que servirá como base
 |    |    ├── images
 |    |    ├── others
 |    ├──src
-|    |    ├── config
-|    |    ├── controllers
-|    |    ├── models
-|    |    ├── routes
-|    |    ├── templates
-|    |    ├── app.js
+|    |    ├── config                # Configuraciones de la app (base de datos, variables)
+|    |    ├── controllers           # Lógica que controla las rutas, recibe y responde peticiones
+|    |    ├── models                # Definición de los modelos y esquemas para la base de datos
+|    |    ├── routes                # Definición de las rutas y endpoints de la aplicación
+|    |    ├── templates             # Plantillas o vistas para renderizar HTML
 |    ├── .env
 |    ├── .gitignore
 |    ├── package-lock.json
