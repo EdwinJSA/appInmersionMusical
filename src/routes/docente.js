@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/:correo', (req, res) => {
     const { correo } = req.params.correo;
     console.log(`Correo del docente: ${correo}`);
-    res.sendFile(path.join(__dirname, '..', 'template', 'docente.html'));
+    res.render('docente', { session : { userType: 'profesor'} });
 });
 
 module.exports = router;

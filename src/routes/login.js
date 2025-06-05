@@ -5,39 +5,42 @@ const { validarUsuario } = require('../controllers/usuario');
 const router = express.Router();
 
 router.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'template', 'login.html'));
+    res.render('login', { layout: false });
 });
 
 router.post('/verificarUsuario', async (req, res) => {
     const { username, password, tipoUsuario } = req.body;
+
     try {
         const usuario = await validarUsuario(username, password, tipoUsuario);
 
-        if(!usuario) {
+        if (!usuario) {
             return res.status(401).send('Credenciales inválidas');
         }
 
+        // ✅ Asignar propiedades individuales a la sesión (NO sobrescribirla)
+        req.session.username = usuario.username;
+        req.session.tipoUsuario = usuario.usertype;
+
+        // Redirección basada en el tipo de usuario
         switch (tipoUsuario) {
             case 'ADMINISTRADOR':
                 console.log(`Usuario administrador autenticado: ${usuario.username}`);
-                res.redirect(`/admin/${usuario.username}`);
-                break;
+                return res.redirect(`/admin/${usuario.username}`);
             case 'DOCENTE':
                 console.log(`Usuario docente autenticado: ${usuario.username}`);
-                res.redirect(`/docente/${usuario.username}`);
-                break;
+                return res.redirect(`/docente/${usuario.username}`);
             case 'ESTUDIANTE':
                 console.log(`Usuario estudiante autenticado: ${usuario.username}`);
-                res.redirect(`/estudiante/${usuario.username}`);
-                break;
+                return res.redirect(`/estudiante/${usuario.username}`);
             default:
                 return res.status(400).send('Tipo de usuario no válido');
         }
 
     } catch (error) {
-        res.status(500).send('Error interno del servidor');
+        console.error('Error al verificar usuario:', error);
+        return res.status(500).send('Error interno del servidor');
     }
 });
-
 
 module.exports = router;

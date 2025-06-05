@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home</title>
+
+  <link rel="shortcut icon" href="/static/logo.ico" type="image/x-icon" />
+  <script src="/static/main.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center pb-16">
+
+  <header class="w-full bg-blue-900 p-4 flex justify-between items-center text-white">
+    <div class="flex items-center">
+      <img src="/static/logo.png" alt="Logo" class="w-8 h-8"/>
+      <h1 class="text-lg font-bold pl-2">Inmersion Musical</h1>
+    </div>
+    <a href="/logout" class="bg-white text-blue-600 px-4 py-1 rounded">Salir</a>
+  </header>
+
+  <nav id="navbar" class="w-full fixed bottom-0 bg-blue-900 flex justify-around py-3 border-t border-blue-700 rounded-t-2xl">
+    <a href="/user_view" class="flex flex-col items-center text-white hover:text-blue-300">
+      <i class="fas fa-user text-xl"></i>
+      <span class="text-sm">Users</span>
+    </a>
+
+
+    <a href="/mail_view" class="flex flex-col items-center text-white hover:text-blue-300">
+      <i class="fas fa-envelope text-xl"></i>
+      <span class="text-sm">Mails</span>
+    </a>
+
+    <a href="/homeDocente" class="flex flex-col items-center text-white hover:text-blue-300">
+      <i class="fas fa-home text-xl"></i>
+      <span class="text-sm">Home</span>
+    </a>
+
+    <a href="/home" class="flex flex-col items-center text-white hover:text-blue-300">
+      <i class="fas fa-home text-xl"></i>
+      <span class="text-sm">Home</span>
+    </a>
+
+    <a href="/docs_view" class="flex flex-col items-center text-white hover:text-blue-300">
+      <i class="fas fa-file-alt text-xl"></i>
+      <span class="text-sm">Docs</span>
+    </a>
+    <a href="/grupos_view" class="flex flex-col items-center text-white hover:text-blue-300">
+      <i class="fas fa-users text-xl"></i>
+      <span class="text-sm">Groups</span>
+    </a>
+  </nav>
+
+    <main class="w-full flex flex-col items-center pb-16">
+        <%- body %>
+    </main>
+
+  <script>
+    //<!-- // 👇 Solo para fines de prueba visual
+    //const session = {
+    //  userType: 'profesor' // Cambia a 'estudiante' o 'profesor' para ver cómo cambia el menú
+    //}; -->
+
+    // Simular comportamiento dinámico
+    document.addEventListener("DOMContentLoaded", function () {
+      const navbar = document.getElementById("navbar");
+      const mainContent = document.querySelector("main");
+
+      if (navbar && mainContent) {
+        mainContent.style.paddingBottom = `${navbar.offsetHeight}px`;
+      }
+
+      console.log("Sesión simulada:", session);
+    });
+  </script>
+</body>
+</html>
