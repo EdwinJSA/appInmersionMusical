@@ -17,9 +17,9 @@ app.use(session({
   saveUninitialized: false,
 }));
 
-// Middleware para ver la sesión en consola (opcional para desarrollo)
+// 🔥 Middleware GLOBAL para que `session` esté disponible en TODAS las vistas
 app.use((req, res, next) => {
-  console.log('Sesión actual:', req.session);
+  res.locals.session = req.session;
   next();
 });
 
@@ -40,6 +40,7 @@ const loginRoutes = require('./routes/login');
 const docenteRoutes = require('./routes/docente');
 const estudianteRoutes = require('./routes/estudiante');
 const adminRoutes = require('./routes/admin');
+const correoRoutes = require('./routes/correo');
 
 // Importar middleware de sesión personalizado
 const verificarSesion = require('./middlewares/auth');
@@ -52,6 +53,7 @@ app.use('/', loginRoutes);
 app.use('/docente', verificarSesion, docenteRoutes);
 app.use('/estudiante', verificarSesion, estudianteRoutes);
 app.use('/admin', verificarSesion, adminRoutes);
+app.use('/mail', verificarSesion, correoRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {

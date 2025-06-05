@@ -1,0 +1,128 @@
+<div class="max-w-md mx-auto">
+  <div class="flex items-center justify-between mb-4 mt-4">
+    <h1 class="text-2xl font-bold text-blue-600">Mail</h1>
+    <button id="openModal" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600">
+      <i class="fas fa-plus mr-2"></i> Nuevo
+    </button>
+  </div>
+
+  <div class="space-y-2">
+    <% emails.forEach(email => { %>
+      <a href="/verCorreo/<%= email.id %>" class="bg-white p-4 rounded-md shadow-md hover:bg-gray-100 block">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="bg-purple-100 text-purple-500 p-3 rounded-full">
+              <i class="fas fa-user text-xl"></i>
+            </div>
+            <div class="px-4">
+              <p class="font-semibold text-gray-700">Asunto: <%= email.asunto %></p>
+              <p class="text-gray-500">De: <%= email.idOrigen.username %></p>
+              <p class="text-gray-500">Fecha: <%= email.fecha %></p>
+            </div>
+          </div>
+          <% if (origen === email.idOrigen.id) { %>
+            <button class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600">
+              <i class="fas fa-arrow-up"></i>
+            </button>
+          <% } else { %>
+            <button class="bg-red-500 text-white p-2 rounded-full hover:bg-red-600">
+              <i class="fas fa-arrow-down"></i>
+            </button>
+          <% } %>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+  <div class="bg-white p-6 rounded-md w-96 max-h-[75vh] overflow-y-auto relative">
+    <button id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="flex items-center gap-3 pb-4">
+      <h1 class="text-2xl sm:text-3xl font-bold text-sky-900">Nuevo Mensaje</h1>
+    </div>
+    <p class="text-sm font-light text-gray-500 pb-4">
+      Complete el formulario a continuación.
+    </p>
+    <form action="/enviarCorreo" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
+      <div>
+        <label for="idOrigen" class="block text-sm font-medium text-gray-700" disable>
+          Origen
+        </label>
+        <select name="idOrigen" id="idOrigen" class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none focus:ring">
+          <option value="">-------</option>
+          <option value="<%= origen %>">Tú</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="idDestino" class="block text-sm font-medium text-gray-700">
+          Destino
+        </label>
+        <select name="idDestino" id="idDestino" class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none focus:ring">
+          <option value="">-------</option>
+          <% if (session.userType === 'docente') { %>
+            <% destino.forEach(estudiante => { %>
+              <option value="<%= estudiante.idUsuario %>"><%= estudiante.nombre %></option>
+            <% }) %>
+          <% } %>
+          <% if (session.userType === 'estudiante') { %>
+            <option value="1">Profesor Sergio</option>
+          <% } %>
+        </select>
+      </div>
+
+      <div>
+        <label for="asunto" class="block text-sm font-medium text-gray-700">
+          Asunto
+        </label>
+        <input type="text" name="asunto" id="asunto" class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none focus:ring" placeholder="Asunto">
+      </div>
+
+      <div>
+        <label for="cuerpo" class="block text-sm font-medium text-gray-700">
+          Cuerpo
+        </label>
+        <textarea name="cuerpo" id="cuerpo" class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none focus:ring" placeholder="Cuerpo"></textarea>
+      </div>
+
+      <div>
+        <label for="linkArchivo" class="block text-sm font-medium text-gray-700">
+          Adjunta un Archivo
+        </label>
+        <input type="file" name="linkArchivo" id="linkArchivo" class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none focus:ring">
+      </div>
+
+      <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">
+        Enviar
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Obtener los elementos del modal
+  const modal = document.getElementById('modal');
+  const openModalButton = document.getElementById('openModal');
+  const closeModalButton = document.getElementById('closeModal');
+
+  // Mostrar el modal cuando se haga clic en el botón "Nuevo"
+  openModalButton.addEventListener('click', () => {
+    modal.classList.remove('hidden');
+  });
+
+  // Cerrar el modal cuando se haga clic en el botón de cerrar
+  closeModalButton.addEventListener('click', () => {
+    modal.classList.add('hidden');
+  });
+
+  // Cerrar el modal si se hace clic fuera del área del modal
+  window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.add('hidden');
+    }
+  });
+</script>

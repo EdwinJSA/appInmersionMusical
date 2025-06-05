@@ -1,3 +1,17 @@
-<main class="w-full flex flex-col items-center pb-16">
-    <h2 class="text-2xl font-bold mt-8">Dashboard Docente</h2>
+<main class="w-full max-w-md px-4 py-6">
+  <div class="bg-gradient-to-b from-cyan-500 to-blue-500 text-white h-2/6 p-4 rounded-lg shadow-md text-center">
+    <h2 class="text-3xl font-bold py-3">Hola, <%= nombreDocente %>!</h2>
+    <p>Este es tu resumen de la Academia</p>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 mt-6">
+    <% cursos.forEach(curso => { %>
+      <% if (curso.nombre !== 'publico') { %>
+        <div class="bg-gradient-to-b from-<%= curso.background %>-500 to-<%= curso.background %>-600 text-white p-6 rounded-lg text-center shadow-md">
+          <h3 class="text-3xl font-bold"><%= curso.num_estudiantes %></h3>
+          <p>Estudiantes de <%= curso.nombre %></p>
+        </div>
+      <% } %>
+    <% }); %>
+  </div>
 </main>

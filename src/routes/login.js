@@ -8,6 +8,13 @@ router.get('/login', (req, res) => {
     res.render('login', { layout: false });
 });
 
+router.get('/logout', (req, res) => {
+    req.session.username = null;
+    req.session.tipoUsuario = null;
+    req.session.destroy();
+    res.redirect('/');
+})
+
 router.post('/verificarUsuario', async (req, res) => {
     const { username, password, tipoUsuario } = req.body;
 
@@ -20,7 +27,7 @@ router.post('/verificarUsuario', async (req, res) => {
 
         // ✅ Asignar propiedades individuales a la sesión (NO sobrescribirla)
         req.session.username = usuario.username;
-        req.session.tipoUsuario = usuario.usertype;
+        req.session.tipoUsuario = usuario.usertype.toLowerCase();
 
         // Redirección basada en el tipo de usuario
         switch (tipoUsuario) {

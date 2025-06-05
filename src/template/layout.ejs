@@ -13,6 +13,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center pb-16">
 
+  <!-- Header -->
   <header class="w-full bg-blue-900 p-4 flex justify-between items-center text-white">
     <div class="flex items-center">
       <img src="/static/logo.png" alt="Logo" class="w-8 h-8"/>
@@ -21,49 +22,61 @@
     <a href="/logout" class="bg-white text-blue-600 px-4 py-1 rounded">Salir</a>
   </header>
 
-  <nav id="navbar" class="w-full fixed bottom-0 bg-blue-900 flex justify-around py-3 border-t border-blue-700 rounded-t-2xl">
-    <a href="/user_view" class="flex flex-col items-center text-white hover:text-blue-300">
-      <i class="fas fa-user text-xl"></i>
-      <span class="text-sm">Users</span>
-    </a>
+  <!-- Main content -->
+  <main class="w-full flex flex-col items-center pb-16">
+    <%- body %>
+  </main>
 
+  <!-- Mostrar sesión para depuración -->
+  <pre class="text-red-500 text-xs">
+    <%= JSON.stringify(session, null, 2) %>
+  </pre>
 
-    <a href="/mail_view" class="flex flex-col items-center text-white hover:text-blue-300">
-      <i class="fas fa-envelope text-xl"></i>
-      <span class="text-sm">Mails</span>
-    </a>
+  <!-- Navbar -->
+  <nav id="navbar" class="w-full fixed bottom-0 bg-blue-900 border-t border-blue-700 rounded-t-2xl overflow-x-auto">
+    <div class="flex flex-nowrap justify-around px-4 py-3 space-x-6 min-w-full">
 
-    <a href="/homeDocente" class="flex flex-col items-center text-white hover:text-blue-300">
-      <i class="fas fa-home text-xl"></i>
-      <span class="text-sm">Home</span>
-    </a>
+      <% if (session.userType === 'docente') { %>
+        <a href="/user_view" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
+          <i class="fas fa-user text-xl"></i>
+          <span class="text-sm">Users</span>
+        </a>
+      <% } %>
 
-    <a href="/home" class="flex flex-col items-center text-white hover:text-blue-300">
-      <i class="fas fa-home text-xl"></i>
-      <span class="text-sm">Home</span>
-    </a>
+      <a href="/mail/<%= session.username %>" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
+        <i class="fas fa-envelope text-xl"></i>
+        <span class="text-sm">Mails</span>
+      </a>
 
-    <a href="/docs_view" class="flex flex-col items-center text-white hover:text-blue-300">
-      <i class="fas fa-file-alt text-xl"></i>
-      <span class="text-sm">Docs</span>
-    </a>
-    <a href="/grupos_view" class="flex flex-col items-center text-white hover:text-blue-300">
-      <i class="fas fa-users text-xl"></i>
-      <span class="text-sm">Groups</span>
-    </a>
+      <% if (session.userType === 'docente') { %>
+        <a href="/docente/<%= session.username %>" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
+          <i class="fas fa-home text-xl"></i>
+          <span class="text-sm">Home</span>
+        </a>
+
+        <a href="/docs_view" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
+          <i class="fas fa-file-alt text-xl"></i>
+          <span class="text-sm">Docs</span>
+        </a>
+
+        <a href="/grupos_view" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
+          <i class="fas fa-users text-xl"></i>
+          <span class="text-sm">Groups</span>
+        </a>
+      <% } %>
+
+      <% if (session.userType === 'estudiante') { %>
+        <a href="/estudiante/<%= session.username %>" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
+          <i class="fas fa-home text-xl"></i>
+          <span class="text-sm">Home</span>
+        </a>
+      <% } %>
+
+    </div>
   </nav>
 
-    <main class="w-full flex flex-col items-center pb-16">
-        <%- body %>
-    </main>
-
+  <!-- Script para ajustar padding inferior según navbar -->
   <script>
-    //<!-- // 👇 Solo para fines de prueba visual
-    //const session = {
-    //  userType: 'profesor' // Cambia a 'estudiante' o 'profesor' para ver cómo cambia el menú
-    //}; -->
-
-    // Simular comportamiento dinámico
     document.addEventListener("DOMContentLoaded", function () {
       const navbar = document.getElementById("navbar");
       const mainContent = document.querySelector("main");
@@ -71,8 +84,6 @@
       if (navbar && mainContent) {
         mainContent.style.paddingBottom = `${navbar.offsetHeight}px`;
       }
-
-      console.log("Sesión simulada:", session);
     });
   </script>
 </body>
