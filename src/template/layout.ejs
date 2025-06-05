@@ -37,7 +37,7 @@
     <div class="flex flex-nowrap justify-around px-4 py-3 space-x-6 min-w-full">
 
       <% if (session.userType === 'docente') { %>
-        <a href="/user_view" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
+        <a href="/docente/estCurso" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
           <i class="fas fa-user text-xl"></i>
           <span class="text-sm">Users</span>
         </a>
@@ -54,12 +54,12 @@
           <span class="text-sm">Home</span>
         </a>
 
-        <a href="/docs_view" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
+        <a href="/docente/documentos" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
           <i class="fas fa-file-alt text-xl"></i>
           <span class="text-sm">Docs</span>
         </a>
 
-        <a href="/grupos_view" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
+        <a href="/docente/grupos" class="flex-shrink-0 flex flex-col items-center text-white hover:text-blue-300">
           <i class="fas fa-users text-xl"></i>
           <span class="text-sm">Groups</span>
         </a>

@@ -1,0 +1,293 @@
+<div class="bg-gray-100 min-h-screen px-4 sm:px-6 lg:px-8 py-6 w-full">
+    <!-- Header -->
+    <div class="flex flex-row items-center justify-between mb-6 gap-3 w-full">
+        <h1 class="text-2xl font-bold text-blue-600">Usuarios</h1>
+        <button id="openModal"
+            class="flex items-center bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600">
+            <i class="fas fa-plus mr-2"></i> Agregar
+        </button>
+    </div>
+
+
+    <!-- Search Bar -->
+    <div class="mb-6 w-full">
+        <div class="relative w-full">
+            <input type="text" id="searchInput" placeholder="Buscar Estudiante"
+                class="w-full border-gray-300 rounded-md py-2 pl-10 pr-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+            <i class="fas fa-search absolute left-3 top-2.5 text-gray-500"></i>
+        </div>
+    </div>
+
+    <!-- User List -->
+    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full" id="userList">
+        <% usuarios.forEach(usuario => { %>
+            <div class="user-card bg-white shadow-md rounded-lg p-4 flex flex-row items-center justify-between gap-3 w-full">
+                <div class="text-gray-700 font-semibold text-lg sm:text-base usuario-nombre">
+                    <%= usuario.nombre %>
+                </div>
+                <div class="flex flex-row gap-2">
+                    <button class="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 openRecomendacionModal"
+                        data-nombre="<%= usuario.nombre %>" data-id="<%= usuario.id %>">
+                        <i class="fa-regular fa-folder"></i>
+                    </button>
+                    <a href="/editarEstudiante/<%= usuario.id %>" class="bg-green-500 text-white p-2 rounded-md hover:bg-green-600">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <button class="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 deleteButton"
+                        data-id="<%= usuario.id %>">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+
+
+    <!-- Modal Registro -->
+    <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative max-h-[75vh] overflow-y-auto">
+            <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="flex items-center gap-3 pb-4">
+                <img src="/static/logo.png" alt="Logo" class="w-12 h-12">
+                <h1 class="text-2xl sm:text-3xl font-bold text-sky-900">Registro de Estudiante</h1>
+            </div>
+            <p class="text-sm font-light text-gray-500 pb-4">Complete el formulario para registrar un estudiante.</p>
+            <form method="post" action="/registrarEstudiante" class="flex flex-col gap-4">
+                <% formFields.forEach(field => { %>
+                    <div>
+                        <label for="<%= field.id %>" class="block text-sm font-medium text-gray-700"><%= field.label %></label>
+                        <%- field.html %>
+                    </div>
+                <% }) %>
+                <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Registrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Recomendación -->
+    <div id="recomendacionModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-8 relative">
+            <button id="closeRecomendacionModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <h1 class="text-xl font-semibold text-center text-white bg-indigo-900 py-2 rounded-md">Recomendación</h1>
+            <form class="mt-6 space-y-4" action="/registrarRecomendacion" method="post">
+                <div>
+                    <label for="estudiante" class="block text-sm font-medium text-gray-700">Estudiante</label>
+                    <input type="text" id="estudiante" name="estudiante"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        readonly />
+                </div>
+                <input type="hidden" id="estudianteId" name="estudianteId" />
+                <div>
+                    <label for="recomendacion" class="block text-sm font-medium text-gray-700">Recomendación</label>
+                    <textarea id="recomendacion" rows="4" name="recomendacion"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="Escribe la recomendación aquí..." required></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700">
+                    Enviar Recomendación
+                </button>
+            </form>
+            <div class="mt-8">
+                <h2 class="text-center text-sm font-medium text-gray-600">-- Recomendaciones anteriores --</h2>
+                <div class="mt-4 space-y-3 overflow-y-auto max-h-[120px]" id="recomendaciones"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal = document.getElementById('modal');
+            const openModal = document.getElementById('openModal');
+            const closeModal = document.getElementById('closeModal');
+
+            const recomendacionModal = document.getElementById('recomendacionModal');
+            const openRecomendacionButtons = document.querySelectorAll('.openRecomendacionModal');
+            const closeRecomendacionModal = document.getElementById('closeRecomendacionModal');
+
+            // Abrir/Cerrar Modal Registro
+            openModal?.addEventListener('click', () => modal.classList.remove('hidden'));
+            closeModal?.addEventListener('click', () => modal.classList.add('hidden'));
+
+            // Abrir Modal Recomendación
+            openRecomendacionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const nombre = button.getAttribute('data-nombre');
+                    const id = button.getAttribute('data-id');
+                    document.getElementById('estudiante').value = nombre;
+                    document.getElementById('estudianteId').value = id;
+                    recomendacionModal.classList.remove('hidden');
+
+                    const recomendacionesContainer = document.getElementById('recomendaciones');
+                    recomendacionesContainer.innerHTML = "";
+
+                    fetch('/recomendaciones/' + id)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.recomendaciones.forEach(rec => {
+                                recomendacionesContainer.innerHTML += `
+                                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-md">
+                                        <p class="text-sm font-medium text-gray-700">${rec.fecha}</p>
+                                        <p class="text-sm text-gray-600">${rec.descripcion}</p>
+                                    </div>`;
+                            });
+                        })
+                        .catch(error => console.error('Error al obtener recomendaciones:', error));
+                });
+            });
+
+            // Cerrar Modal Recomendación
+            closeRecomendacionModal?.addEventListener('click', () => {
+                recomendacionModal.classList.add('hidden');
+            });
+
+            // Cerrar modales haciendo clic fuera del contenido
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) modal.classList.add('hidden');
+                if (event.target === recomendacionModal) recomendacionModal.classList.add('hidden');
+            });
+
+            // Búsqueda en tiempo real
+            const searchInput = document.getElementById('searchInput');
+            const userCards = document.querySelectorAll('.user-card');
+
+            searchInput?.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                userCards.forEach(card => {
+                    const nombre = card.querySelector('.usuario-nombre').textContent.toLowerCase();
+                    card.style.display = nombre.includes(query) ? 'flex' : 'none';
+                });
+            });
+        });
+    </script>
+</div>
+
+
+    <!-- Modal Registro -->
+    <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative max-h-[75vh] overflow-y-auto">
+            <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="flex items-center gap-3 pb-4">
+                <img src="/static/logo.png" alt="Logo" class="w-12 h-12">
+                <h1 class="text-2xl sm:text-3xl font-bold text-sky-900">Registro de Estudiante</h1>
+            </div>
+            <p class="text-sm font-light text-gray-500 pb-4">Complete el formulario para registrar un estudiante.</p>
+            <form method="post" action="/registrarEstudiante" class="flex flex-col gap-4">
+                <% formFields.forEach(field => { %>
+                    <div>
+                        <label for="<%= field.id %>" class="block text-sm font-medium text-gray-700"><%= field.label %></label>
+                        <%- field.html %>
+                    </div>
+                <% }) %>
+                <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Registrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Recomendación -->
+    <div id="recomendacionModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-8 relative">
+            <button id="closeRecomendacionModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <h1 class="text-xl font-semibold text-center text-white bg-indigo-900 py-2 rounded-md">Recomendación</h1>
+            <form class="mt-6 space-y-4" action="/registrarRecomendacion" method="post">
+                <div>
+                    <label for="estudiante" class="block text-sm font-medium text-gray-700">Estudiante</label>
+                    <input type="text" id="estudiante" name="estudiante"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        readonly />
+                </div>
+                <input type="hidden" id="estudianteId" name="estudianteId" />
+                <div>
+                    <label for="recomendacion" class="block text-sm font-medium text-gray-700">Recomendación</label>
+                    <textarea id="recomendacion" rows="4" name="recomendacion"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="Escribe la recomendación aquí..." required></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700">
+                    Enviar Recomendación
+                </button>
+            </form>
+            <div class="mt-8">
+                <h2 class="text-center text-sm font-medium text-gray-600">-- Recomendaciones anteriores --</h2>
+                <div class="mt-4 space-y-3 overflow-y-auto max-h-[120px]" id="recomendaciones"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal = document.getElementById('modal');
+            const openModal = document.getElementById('openModal');
+            const closeModal = document.getElementById('closeModal');
+
+            const recomendacionModal = document.getElementById('recomendacionModal');
+            const openRecomendacionButtons = document.querySelectorAll('.openRecomendacionModal');
+            const closeRecomendacionModal = document.getElementById('closeRecomendacionModal');
+
+            // Abrir/Cerrar Modal Registro
+            openModal?.addEventListener('click', () => modal.classList.remove('hidden'));
+            closeModal?.addEventListener('click', () => modal.classList.add('hidden'));
+
+            // Abrir Modal Recomendación
+            openRecomendacionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const nombre = button.getAttribute('data-nombre');
+                    const id = button.getAttribute('data-id');
+                    document.getElementById('estudiante').value = nombre;
+                    document.getElementById('estudianteId').value = id;
+                    recomendacionModal.classList.remove('hidden');
+
+                    const recomendacionesContainer = document.getElementById('recomendaciones');
+                    recomendacionesContainer.innerHTML = "";
+
+                    fetch('/recomendaciones/' + id)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.recomendaciones.forEach(rec => {
+                                recomendacionesContainer.innerHTML += `
+                                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-md">
+                                        <p class="text-sm font-medium text-gray-700">${rec.fecha}</p>
+                                        <p class="text-sm text-gray-600">${rec.descripcion}</p>
+                                    </div>`;
+                            });
+                        })
+                        .catch(error => console.error('Error al obtener recomendaciones:', error));
+                });
+            });
+
+            // Cerrar Modal Recomendación
+            closeRecomendacionModal?.addEventListener('click', () => {
+                recomendacionModal.classList.add('hidden');
+            });
+
+            // Cerrar modales haciendo clic fuera del contenido
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) modal.classList.add('hidden');
+                if (event.target === recomendacionModal) recomendacionModal.classList.add('hidden');
+            });
+
+            // Búsqueda en tiempo real
+            const searchInput = document.getElementById('searchInput');
+            const userCards = document.querySelectorAll('.user-card');
+
+            searchInput?.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                userCards.forEach(card => {
+                    const nombre = card.querySelector('.usuario-nombre').textContent.toLowerCase();
+                    card.style.display = nombre.includes(query) ? 'flex' : 'none';
+                });
+            });
+        });
+    </script>
+</div>

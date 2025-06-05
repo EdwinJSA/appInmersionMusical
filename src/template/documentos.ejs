@@ -1,0 +1,101 @@
+<body class="bg-gray-100 p-6">
+  <div class="max-w-md mx-auto space-y-6">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-4 mt-4">
+      <h1 class="text-2xl font-bold text-blue-600">Documentos y Videos</h1>
+      <button class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600">
+        Ver Historial
+      </button>
+    </div>
+
+    <!-- Modal de Historial -->
+    <div id="modalHistorial" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+      <div class="bg-white p-6 rounded-lg w-3/4 max-w-4xl max-h-[75vh] overflow-y-auto relative">
+        <button class="absolute top-4 right-4 p-2 text-gray-600 hover:text-gray-800" onclick="document.getElementById('modalHistorial').classList.add('hidden')">&times;</button>
+        <h2 class="text-xl font-bold mb-4">Historial de Videos y Documentos</h2>
+
+        <div class="overflow-y-auto max-h-80">
+          <% historial.forEach(item => { %>
+            <div class="mb-4">
+              <h3 class="font-semibold"><%= item.titulo %></h3>
+              <p class="text-xs text-gray-400">Fecha: <%= item.fecha %></p>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.querySelector('button').onclick = function() {
+        document.getElementById('modalHistorial').classList.remove('hidden');
+      };
+    </script>
+
+    <!-- Formulario de Video -->
+    <form class="bg-white shadow-md rounded-lg p-6 space-y-4" method="POST" action="/publicarVideo">
+      <div class="flex items-center space-x-3">
+        <i class="fas fa-video text-red-500 text-xl"></i>
+        <h2 class="text-lg font-bold text-gray-700">Video de Youtube</h2>
+      </div>
+      <div class="space-y-4">
+        <div class="flex items-center bg-gray-100 p-3 rounded-lg">
+          <i class="fas fa-heading text-gray-400 mr-3"></i>
+          <input name="titulo" type="text" placeholder="Título del Video" class="w-full bg-transparent focus:outline-none text-gray-700" required />
+        </div>
+        <div class="flex items-center bg-gray-100 p-3 rounded-lg">
+          <i class="fas fa-heading text-gray-400 mr-3"></i>
+          <textarea name="DescripcionVideo" placeholder="Agrega una Descripcion del Video" class="w-full bg-transparent focus:outline-none text-gray-700" required></textarea>
+        </div>
+        <div class="flex items-center bg-gray-100 p-3 rounded-lg">
+          <i class="fas fa-link text-gray-400 mr-3"></i>
+          <input name="link" type="url" placeholder="https://www.youtube.com/watch?XXXX" class="w-full bg-transparent focus:outline-none text-gray-700" required />
+        </div>
+        <div class="flex items-center bg-gray-100 p-3 rounded-lg">
+          <i class="fas fa-users text-gray-400 mr-3"></i>
+          <select name="grupo" class="w-full bg-transparent focus:outline-none text-gray-700" required>
+            <option value="">-- Seleccione el grupo --</option>
+            <% grupos.forEach(grupo => { %>
+              <option value="<%= grupo.id %>"><%= grupo.nombre %></option>
+            <% }) %>
+          </select>
+        </div>
+        <button class="bg-blue-900 text-white w-full py-2 rounded-md hover:bg-blue-800">
+          Enviar
+        </button>
+      </div>
+    </form>
+
+    <!-- Formulario de Documento -->
+    <form action="/publicarDocumento" enctype="multipart/form-data" method="POST" class="bg-white shadow-md rounded-lg p-6 space-y-4">
+      <div class="flex items-center space-x-3">
+        <i class="fas fa-folder text-yellow-500 text-xl"></i>
+        <h2 class="text-lg font-bold text-gray-700">Documentos</h2>
+      </div>
+      <div class="flex items-center bg-gray-100 p-3 rounded-lg">
+        <i class="fas fa-heading text-gray-400 mr-3"></i>
+        <input name="tituloDocumento" type="text" placeholder="Título del Documento" class="w-full bg-transparent focus:outline-none text-gray-700" required />
+      </div>
+      <div class="space-y-4">
+        <div class="bg-gray-100 p-3 rounded-lg">
+          <label for="linkArchivo" class="block text-sm font-medium text-gray-700">Adjunta un Archivo</label>
+          <input type="file" name="linkArchivo" id="linkArchivo" class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none focus:ring">
+          <p class="text-sm text-gray-500 mt-2">Formato Aceptado: pdf. Tamaño Máx.: 5 Mb</p>
+        </div>
+        <div class="flex items-center bg-gray-100 p-3 rounded-lg">
+          <i class="fas fa-users text-gray-400 mr-3"></i>
+          <select name="grupo" class="w-full bg-transparent focus:outline-none text-gray-700">
+            <option value="">-- Seleccione el grupo --</option>
+            <% grupos.forEach(grupo => { %>
+              <option value="<%= grupo.id %>"><%= grupo.nombre %></option>
+            <% }) %>
+          </select>
+        </div>
+        <button type="submit" class="bg-blue-900 text-white w-full py-2 rounded-md hover:bg-blue-800">
+          Enviar
+        </button>
+      </div>
+    </form>
+
+  </div>
+</body>
