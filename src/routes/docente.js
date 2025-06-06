@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const consultaDocente = require('../controllers/consultaDocente');
 
 router.get('/grupos', (req, res) => {
   res.render('grupos', {
@@ -38,13 +39,10 @@ router.get('/documentos', (req, res) => {
 module.exports = router;
 
 
-// 👇 ESTA debe ir PRIMERO
-router.get('/estCurso', (req, res) => {
-    const usuarios = [
-        { id: 1, nombre: 'Juan Pérez' },
-        { id: 2, nombre: 'Ana Gómez' },
-        { id: 3, nombre: 'Carlos Ruiz' },
-    ];
+router.get('/estCurso', async (req, res) => {
+    const usuarios = await consultaDocente.alumnosCursoPorDocente(req.session.username);
+
+    console.table(usuarios);
 
     res.render('estCurso', {
         session: {
@@ -52,6 +50,7 @@ router.get('/estCurso', (req, res) => {
             userType: req.session.tipoUsuario
         },
         usuarios,
+        // ESTO TIENE QUE ELIMINARSE LUEGO, PORQUE NO SE GENERA EL FORMULARIO POR MEDIO DE ESTO
         formFields: [
             { id: 'nombre', label: 'Nombre', html: '<input type="text" name="nombre" id="nombre" class="form-control">' },
             { id: 'carnet', label: 'Carnet', html: '<input type="text" name="carnet" id="carnet" class="form-control">' }
@@ -59,7 +58,6 @@ router.get('/estCurso', (req, res) => {
     });
 });
 
-// 👇 ESTA va después
 router.get('/:correo', (req, res) => {
     const correo = req.params.correo;
     console.log(`Correo del docente: ${correo}`);
