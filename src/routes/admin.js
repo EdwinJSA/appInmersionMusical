@@ -20,6 +20,10 @@ router.post('/registrarEstudiante', async (req, res) => {
             tutor
         } = req.body;
 
+        let correos = [];
+        if (correoTutor) correos.push(correoTutor);
+        if (correo) correos.push(correo);
+
         console.table(req.body);
 
         // Validaciones básicas
@@ -31,12 +35,6 @@ router.post('/registrarEstudiante', async (req, res) => {
         if (isNaN(edad)) {
             return res.status(400).json({ error: 'Fecha de nacimiento inválida' });
         }
-
-        // // Verificar si el usuario ya existe para evitar duplicados
-        // const usuarioExistente = await consultasAdmin.obtenerUsuarioPorCorreo(correo);
-        // if (usuarioExistente) {
-        //     return res.status(409).json({ error: 'El correo ya está registrado' });
-        // }
 
         // Crear contraseña y usuario
         const contrasena = funciones.crearContrasena(nombre, numeroEstudiante);
@@ -55,6 +53,8 @@ router.post('/registrarEstudiante', async (req, res) => {
             celularTutor,
             correoTutor
         );
+        //                          destinatarios, nombreEstudiante, usuario, contraseña
+        await funciones.enviarCorreo(correos, nombre, correo, contrasena);
 
         console.log(`Estudiante ${nombre} registrado exitosamente con ID: ${idNuevoUsuario}`);
 
@@ -68,7 +68,7 @@ router.post('/registrarEstudiante', async (req, res) => {
     } catch (error) {
         console.error('❌ Error registrando estudiante:', error.message);
 
-        if (error.code === '23505') { // Código de error de llave duplicada PostgreSQL
+        if (error.code === '23505') {
             return res.status(409).json({ error: 'El correo o usuario ya existe' });
         }
 

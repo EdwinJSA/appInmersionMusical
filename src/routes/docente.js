@@ -34,12 +34,10 @@ router.get('/documentos', (req, res) => {
     });
 });
 
-module.exports = router;
-
-
 router.get('/estCurso', async (req, res) => {
-    const usuarios = await consultaDocente.alumnosCursoPorDocente(req.session.username);
-
+    //const usuarios = await consultaDocente.alumnosCursoPorDocente(req.session.username);
+    const usuarios = await consultaDocente.alumnosRegisrados();
+    //const iddocente = await consultaDocente.RecuperarIdDocente();
     console.table(usuarios);
 
     res.render('estCurso', {
@@ -48,11 +46,6 @@ router.get('/estCurso', async (req, res) => {
             userType: req.session.tipoUsuario
         },
         usuarios,
-        // ESTO TIENE QUE ELIMINARSE LUEGO, PORQUE NO SE GENERA EL FORMULARIO POR MEDIO DE ESTO
-        formFields: [
-            { id: 'nombre', label: 'Nombre', html: '<input type="text" name="nombre" id="nombre" class="form-control">' },
-            { id: 'carnet', label: 'Carnet', html: '<input type="text" name="carnet" id="carnet" class="form-control">' }
-        ]
     });
 });
 

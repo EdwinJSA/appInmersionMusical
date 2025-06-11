@@ -166,7 +166,7 @@
                 <i class="fas fa-times"></i>
             </button>
             <h1 class="text-xl font-semibold text-center text-white bg-indigo-900 py-2 rounded-md">Recomendación</h1>
-            <form class="mt-6 space-y-4" action="/registrarRecomendacion" method="post">
+            <form class="mt-6 space-y-4" action="docente/registrarRecomendacion/" method="post">
                 <div>
                     <label for="estudiante" class="block text-sm font-medium text-gray-700">Estudiante</label>
                     <input type="text" id="estudiante" name="estudiante"
@@ -174,6 +174,7 @@
                         readonly />
                 </div>
                 <input type="hidden" id="estudianteId" name="estudianteId" />
+                <input type="hidden" id="docenteId" name="docenteId" />
                 <div>
                     <label for="recomendacion" class="block text-sm font-medium text-gray-700">Recomendación</label>
                     <textarea id="recomendacion" rows="4" name="recomendacion"

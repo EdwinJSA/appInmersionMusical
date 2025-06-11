@@ -1,6 +1,18 @@
 //src/controllers/usuario.js
 const pool = require('../config/conexion_db');
 
+const RecuperarIdDocente = async () => {
+    const query = `
+        SELECT id FROM Usuario WHERE username = $1 AND usertype = 'DOCENTE'
+        returning id
+    `;
+    const nombreUsuario = session.username;
+
+    const result = await pool.query(query, nombreUsuario);
+
+    return result.rows[0].id;
+}
+
 const alumnosCursoPorDocente = async (idDocente) => {
     const query = `
         SELECT
@@ -29,4 +41,22 @@ const alumnosCursoPorDocente = async (idDocente) => {
 };
 
 
-module.exports = { alumnosCursoPorDocente };
+const alumnosRegisrados = async() => {
+    const query = `
+        SELECT
+            e.id AS idEstudiante,
+            e.nombre AS nombreEstudiante
+        FROM 
+            Estudiante e
+        WHERE 
+            e.estado = 'true'
+    `;
+    const result = await pool.query(query);
+    return result.rows;
+}
+
+module.exports = { 
+    alumnosCursoPorDocente,
+    alumnosRegisrados,
+    RecuperarIdDocente
+};
