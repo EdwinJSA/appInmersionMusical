@@ -41,155 +41,123 @@
         </div>
     <% }) %>
     </div>
-
-
-    <!-- Modal Registro -->
-    <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-modal="true">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative max-h-[75vh] overflow-y-auto">
-            <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900" aria-label="Cerrar">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="flex items-center gap-3 pb-4">
-                <img src="/static/logo.png" alt="Logo" class="w-12 h-12">
-                <h1 class="text-2xl sm:text-3xl font-bold text-sky-900">Registro de Estudiante</h1>
-            </div>
-            <p class="text-sm font-light text-gray-500 pb-4">Complete el formulario para registrar un estudiante.</p>
-            <form method="post" action="/registrarEstudiante" class="flex flex-col gap-4">
-                <% formFields.forEach(field => { %>
-                    <div>
-                        <label for="<%= field.id %>" class="block text-sm font-medium text-gray-700"><%= field.label %></label>
-                        <%- field.html %>
-                    </div>
-                <% }) %>
-                <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Registrar</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Recomendación -->
-    <div id="recomendacionModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50" role="dialog" aria-modal="true">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-8 relative">
-            <button id="closeRecomendacionModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900" aria-label="Cerrar">
-                <i class="fas fa-times"></i>
-            </button>
-            <h1 class="text-xl font-semibold text-center text-white bg-indigo-900 py-2 rounded-md">Recomendación</h1>
-            <form class="mt-6 space-y-4" action="/registrarRecomendacion" method="post">
-                <div>
-                    <label for="estudiante" class="block text-sm font-medium text-gray-700">Estudiante</label>
-                    <input type="text" id="estudiante" name="estudiante"
-                        class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        readonly />
-                </div>
-                <input type="hidden" id="estudianteId" name="estudianteId" />
-                <div>
-                    <label for="recomendacion" class="block text-sm font-medium text-gray-700">Recomendación</label>
-                    <textarea id="recomendacion" rows="4" name="recomendacion"
-                        class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="Escribe la recomendación aquí..." required></textarea>
-                </div>
-                <button type="submit"
-                    class="w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700">
-                    Enviar Recomendación
-                </button>
-            </form>
-            <div class="mt-8">
-                <h2 class="text-center text-sm font-medium text-gray-600">-- Recomendaciones anteriores --</h2>
-                <div class="mt-4 space-y-3 overflow-y-auto max-h-[120px]" id="recomendaciones"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const modal = document.getElementById('modal');
-            const openModal = document.getElementById('openModal');
-            const closeModal = document.getElementById('closeModal');
-
-            const recomendacionModal = document.getElementById('recomendacionModal');
-            const openRecomendacionButtons = document.querySelectorAll('.openRecomendacionModal');
-            const closeRecomendacionModal = document.getElementById('closeRecomendacionModal');
-
-            // Abrir/Cerrar Modal Registro
-            openModal?.addEventListener('click', () => modal.classList.remove('hidden'));
-            closeModal?.addEventListener('click', () => modal.classList.add('hidden'));
-
-            // Abrir Modal Recomendación
-            openRecomendacionButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const nombre = button.getAttribute('data-nombre');
-                    const id = button.getAttribute('data-id');
-                    document.getElementById('estudiante').value = nombre;
-                    document.getElementById('estudianteId').value = id;
-                    recomendacionModal.classList.remove('hidden');
-
-                    const recomendacionesContainer = document.getElementById('recomendaciones');
-                    recomendacionesContainer.innerHTML = "";
-
-                    fetch('/recomendaciones/' + id)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.recomendaciones.forEach(rec => {
-                                recomendacionesContainer.innerHTML += `
-                                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-md">
-                                        <p class="text-sm font-medium text-gray-700">${rec.fecha}</p>
-                                        <p class="text-sm text-gray-600">${rec.descripcion}</p>
-                                    </div>`;
-                            });
-                        })
-                        .catch(error => console.error('Error al obtener recomendaciones:', error));
-                });
-            });
-
-            // Cerrar Modal Recomendación
-            closeRecomendacionModal?.addEventListener('click', () => {
-                recomendacionModal.classList.add('hidden');
-            });
-
-            // Cerrar modales haciendo clic fuera del contenido
-            window.addEventListener('click', (event) => {
-                if (event.target === modal) modal.classList.add('hidden');
-                if (event.target === recomendacionModal) recomendacionModal.classList.add('hidden');
-            });
-
-            // Búsqueda en tiempo real
-            const searchInput = document.getElementById('searchInput');
-            const userCards = document.querySelectorAll('.user-card');
-
-            searchInput?.addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase();
-                userCards.forEach(card => {
-                    const nombre = card.querySelector('.usuario-nombre').textContent.toLowerCase();
-                    card.style.display = nombre.includes(query) ? 'flex' : 'none';
-                });
-            });
-        });
-    </script>
 </div>
 
 
     <!-- Modal Registro -->
     <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-modal="true">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative max-h-[75vh] overflow-y-auto">
-            <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900" aria-label="Cerrar">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="flex items-center gap-3 pb-4">
-                <img src="/static/logo.png" alt="Logo" class="w-12 h-12">
-                <h1 class="text-2xl sm:text-3xl font-bold text-sky-900">Registro de Estudiante</h1>
-            </div>
-            <p class="text-sm font-light text-gray-500 pb-4">Complete el formulario para registrar un estudiante.</p>
-            <form method="post" action="/registrarEstudiante" class="flex flex-col gap-4">
-                <% formFields.forEach(field => { %>
-                    <div>
-                        <label for="<%= field.id %>" class="block text-sm font-medium text-gray-700"><%= field.label %></label>
-                        <%- field.html %>
-                    </div>
-                <% }) %>
-                <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Registrar</button>
-            </form>
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative max-h-[75vh] overflow-y-auto">
+        <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900" aria-label="Cerrar">
+        <i class="fas fa-times"></i>
+        </button>
+
+        <div class="flex items-center gap-3 pb-4">
+        <img src="/static/logo.png" alt="Logo" class="w-12 h-12">
+        <h1 class="text-2xl sm:text-3xl font-bold text-sky-900">Registro de Estudiante</h1>
         </div>
+        <p class="text-sm font-light text-gray-500 pb-4">Complete el formulario para registrar un estudiante.</p>
+
+        <form method="post" id="registroEstudianteForm" class="flex flex-col gap-4">
+        <input type="text" name="nombre" placeholder="Nombre completo" required class="input" />
+
+        <input type="text" name="numeroEstudiante" placeholder="Número de estudiante" maxlength="12" required class="input" />
+
+        <input type="mail" name="correo" placeholder="Correo electrónico" required class="input" />
+
+        <input type="text" name="direccion" placeholder="Dirección" required class="input" />
+
+        <label class="text-sm text-gray-600">Fecha de nacimiento:</label>
+        <input type="date" name="fechaNac" required class="input" min="1960-01-01" max="2015-12-31"/>
+
+        <label class="flex items-center gap-2 text-sm text-gray-600">
+            <input type="checkbox" name="tutor" id="tutorCheckbox" class="checkbox" />
+            ¿Tiene tutor?
+        </label>
+
+        <div id="tutorFields" class="hidden flex flex-col gap-4">
+            <input type="text" name="nombreTutor" placeholder="Nombre del tutor" class="input" />
+            <input type="text" name="celularTutor" placeholder="Celular del tutor" maxlength="12" class="input" />
+            <input type="email" name="correoTutor" placeholder="Correo electrónico del tutor" class="input" />
+        </div>
+
+        <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Registrar</button>
+        </form>
     </div>
+    </div>
+
+    <script>
+        document.getElementById('registroEstudianteForm').addEventListener('submit', async function (e) {
+            e.preventDefault(); // Evita que se recargue la página
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            // Convierte "tutor" a booleano si está presente
+            data.tutor = formData.get("tutor") === "on";
+
+            try {
+                const response = await fetch('/admin/registrarEstudiante', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    const resData = await response.json();
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Registro exitoso!',
+                        text: `Usuario: ${resData.usuario}\nContraseña: ${resData.contrasena}`
+                    });
+                    form.reset();
+                    tutorFields.classList.add("hidden");
+                } else {
+                    const errorData = await response.json();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorData.message || 'No se pudo registrar el estudiante.'
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error del servidor',
+                    text: 'Ocurrió un problema al registrar el estudiante.'
+                });
+            }
+        });
+    </script>
+
+
+    <script>
+    const tutorCheckbox = document.getElementById("tutorCheckbox");
+    const tutorFields = document.getElementById("tutorFields");
+
+    tutorCheckbox.addEventListener("change", () => {
+        tutorFields.classList.toggle("hidden", !tutorCheckbox.checked);
+        const inputs = tutorFields.querySelectorAll("input");
+        inputs.forEach(input => input.required = tutorCheckbox.checked);
+    });
+    </script>
+
+    <style>
+    .input {
+        padding: 0.5rem;
+        border: 1px solid #cbd5e0;
+        border-radius: 0.375rem;
+        width: 100%;
+    }
+    .checkbox {
+        width: 1rem;
+        height: 1rem;
+    }
+    </style>
+
 
     <!-- Modal Recomendación -->
     <div id="recomendacionModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50" role="dialog" aria-modal="true">

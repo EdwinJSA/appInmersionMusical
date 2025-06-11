@@ -1,6 +1,8 @@
 const pool = require("../config/conexion_db");
+const { calcularEdad } = require("../controllers/funciones");
 
-// Obtiene los datos del estudiante por idñ
+
+// Obtiene los datos del estudiante por id
 const obtenerDatosEstudiante = async (idEstudiante) => {
   const query = `
         SELECT 

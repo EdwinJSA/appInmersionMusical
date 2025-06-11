@@ -17,8 +17,6 @@ router.get('/grupos', (req, res) => {
   });
 });
 
-
-
 router.get('/documentos', (req, res) => {
     res.render('documentos', {
         session: {

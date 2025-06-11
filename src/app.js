@@ -8,7 +8,7 @@ require('dotenv').config();
 require('./config/conexion_db');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3030;
 
 // Middleware de sesión
 app.use(session({
@@ -57,5 +57,6 @@ app.use('/mail', verificarSesion, correoRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {
+  //console.log(`Servidor corriendo en http://0.0.0.0:${PORT}`);
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
