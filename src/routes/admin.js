@@ -6,6 +6,21 @@ const funciones = require('../controllers/funciones');
 
 const router = express.Router();
 
+router.get('/editarEstudiante/:id', async (req, res) => {
+
+    const { id } = req.params;
+    const estudiante = await consultasAdmin.obtenerEstudiantePorId(id);
+    console.table(estudiante);
+
+    res.render('editarEstudiante', {
+        session: {
+            username: req.session.username,
+            userType: req.session.tipoUsuario
+        },
+        estudiante: estudiante,
+    });
+});
+
 router.post('/registrarEstudiante', async (req, res) => {
     try {
         const {

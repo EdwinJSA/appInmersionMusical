@@ -16,6 +16,14 @@ consultasAdmin.crearNuevoEstudiante(
 );
 */
 
+const obtenerEstudiantePorId = async (id) => {
+    const query = `SELECT * FROM Estudiante WHERE id = $1
+    `;
+    const values = [id];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+}
+
 const crearNuevoEstudiante = async (nombre, numeroestudiante, edad, direccion, fechanac, idusuario, tutor, nombretutor, telefonotutor, correotutor) => {
     if (!tutor) {
         nombretutor = null;
@@ -50,5 +58,6 @@ const crearNuevoUsuario = async (correo, password, tipoUsuario) => {
 
 module.exports = {
     crearNuevoEstudiante,
-    crearNuevoUsuario
+    crearNuevoUsuario,
+    obtenerEstudiantePorId
 };

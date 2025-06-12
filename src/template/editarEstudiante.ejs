@@ -1,0 +1,134 @@
+<!-- Header -->
+<div class="flex flex-row items-center justify-between mb-6 gap-3 w-full py-2 px-2">
+  <h1 class="text-2xl font-bold text-blue-600"></h1>
+</div>
+
+<div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-8">
+
+  <div class="flex items-center gap-4 mb-6">
+    <img src="/static/logo.png" alt="Logo" class="w-12 h-12" />
+    <h1 class="text-3xl font-bold text-sky-900">Detalle del Estudiante</h1>
+  </div>
+
+  <p class="text-sm text-gray-500 mb-6">A continuación se muestran los datos registrados del estudiante.</p>
+
+  <!-- FORMULARIO -->
+  <form id="verEstudianteForm" class="flex flex-col gap-6 select-none pointer-events-none" method="POST" action="/ruta/para/guardar">
+
+    <div>
+      <label class="block text-sm text-gray-600 mb-1">Nombre</label>
+      <input type="text" name="nombre" placeholder="Nombre completo" value="<%= estudiante.nombre %>" disabled
+        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-100" />
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600 mb-1">Número de Estudiante</label>
+      <input type="text" name="numeroEstudiante" maxlength="12" disabled value="<%= estudiante.numeroestudiante %>"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-100" />
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600 mb-1">Edad</label>
+      <input type="number" name="edad" placeholder="Edad" disabled value="<%= estudiante.edad %>"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-100" />
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600 mb-1">Dirección</label>
+      <input type="text" name="direccion" placeholder="Dirección" disabled value="<%= estudiante.direccion %>"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-100" />
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600 mb-1">Fecha de nacimiento</label>
+      <input type="date" name="fechaNac" disabled
+        value="<%= estudiante.fechanac ? estudiante.fechanac.toISOString().split('T')[0] : '' %>"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-100" />
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600 mb-1">Fecha de inscripción</label>
+      <input type="date" name="fecInsc" disabled
+        value="<%= estudiante.fecinsc ? estudiante.fecinsc.toISOString().split('T')[0] : '' %>"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-100" />
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600 mb-1">ID de Usuario</label>
+      <input type="number" name="idUsuario" placeholder="ID de usuario" disabled value="<%= estudiante.idusuario %>"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-100" />
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600 mb-1">Estado</label>
+      <input type="text" name="estado" 
+            value="<%= estudiante.estado ? 'Activo' : 'Inactivo' %>" 
+            disabled
+            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-100" />
+    </div>
+
+    <% if (estudiante.tutor) { %>
+      <div>
+        <h2 class="text-lg font-semibold text-sky-800 mt-4 mb-2">Información del Tutor</h2>
+      </div>
+
+      <div>
+        <label class="block text-sm text-gray-600 mb-1">Nombre del Tutor</label>
+        <input type="text" name="nombreTutor" placeholder="Nombre del tutor" disabled value="<%= estudiante.nombretutor %>"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-100" />
+      </div>
+
+      <div>
+        <label class="block text-sm text-gray-600 mb-1">Celular del Tutor</label>
+        <input type="text" name="celularTutor" maxlength="12" disabled value="<%= estudiante.celulartutor %>"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-100" />
+      </div>
+
+      <div>
+        <label class="block text-sm text-gray-600 mb-1">Correo del Tutor</label>
+        <input type="email" name="correoTutor" placeholder="Correo del tutor" disabled value="<%= estudiante.correotutor %>"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-100" />
+      </div>
+    <% } %>
+
+    <% if (session.userType === 'admin') { %>
+      <div class="mt-6">
+        <button type="submit" id="guardarBtn"
+          class="flex items-center bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 disabled:opacity-50 disabled:pointer-events-none"
+          disabled>
+          <i class="fas fa-save mr-2"></i> Guardar cambios
+        </button>
+      </div>
+    <% } %>
+
+  </form>
+</div>
+
+<!-- PASAR EL session.userType AL JS -->
+<script>
+  const session = {
+    userType: "<%= session.userType %>"
+  };
+</script>
+
+<!-- SCRIPT PARA HABILITAR CAMPOS SOLO SI ES DOCENTE -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('verEstudianteForm');
+    const inputFields = form.querySelectorAll('input');
+    const guardarBtn = document.getElementById('guardarBtn');
+
+    if (session.userType === 'admin') {
+      form.classList.remove('pointer-events-none');
+      form.classList.add('pointer-events-auto');
+
+      inputFields.forEach(input => {
+        input.removeAttribute('disabled');
+      });
+
+      if (guardarBtn) {
+        guardarBtn.removeAttribute('disabled');
+      }
+    }
+  });
+</script>
