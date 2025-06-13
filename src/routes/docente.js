@@ -46,7 +46,7 @@ router.post('/registrarNuevaRecomendacion', async (req, res) => {
     const { estudianteId, estudiante, recomendacion }  = req.body;
     //console.log(`Registrar nueva recomendación: ${estudianteId}, ${estudiante}, ${recomendacion}`);
     await consultaDocente.agregarNuevaRecomendacion(estudianteId, recomendacion);
-    res.direct(`/verRecomendaciones/${estudianteId}`);
+    return res.redirect(`/docente/estCurso`);
 });
 
 router.get('/verRecomendaciones/:id', async (req, res) => {
