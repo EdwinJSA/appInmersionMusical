@@ -1,6 +1,43 @@
 //src/controllers/usuario.js
 const pool = require('../config/conexion_db');
 
+
+const eliminarEstudiante = async (estudianteId) => {
+    const query = `
+        DELETE FROM estudiante
+        WHERE id = $1
+    `;
+    const values = [estudianteId];
+    await pool.query(query, values);
+    console.log(`Estudiante con ID ${estudianteId} eliminado correctamente.`);
+};
+
+const obtenerRecomendacionesPorEstudiante = async (estudianteId) => {
+    const query = `
+        SELECT 
+            descripcion,
+            fecha
+        FROM 
+            recomendaciones
+        WHERE 
+            idestudiante = $1
+        ORDER BY
+            fecha DESC
+    `;
+    const values = [estudianteId];
+    const result = await pool.query(query, values);
+    return result.rows;
+}
+
+const agregarNuevaRecomendacion = async (estudianteId, recomendacion) => {
+    const query = `
+        INSERT INTO recomendaciones (descripcion, idestudiante)
+        VALUES ($1, $2)
+    `;
+    const values = [recomendacion, estudianteId];
+    await pool.query(query, values);
+};
+
 const RecuperarIdDocente = async () => {
     const query = `
         SELECT id FROM Usuario WHERE username = $1 AND usertype = 'DOCENTE'
@@ -58,5 +95,8 @@ const alumnosRegisrados = async() => {
 module.exports = { 
     alumnosCursoPorDocente,
     alumnosRegisrados,
-    RecuperarIdDocente
+    RecuperarIdDocente,
+    agregarNuevaRecomendacion,
+    obtenerRecomendacionesPorEstudiante,
+    eliminarEstudiante
 };

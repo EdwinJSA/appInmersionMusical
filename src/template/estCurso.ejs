@@ -8,6 +8,30 @@
         </button>
     </div>
 
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const openModalBtn = document.getElementById('openModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const modal = document.getElementById('modal');
+
+    openModalBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    // Cierra el modal si se hace clic fuera del contenido del modal
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+});
+</script>
+
+
 
     <!-- Search Bar -->
     <div class="mb-6 w-full">
@@ -26,8 +50,10 @@
                 <%= usuario.nombreestudiante %>
             </div>
             <div class="flex flex-row gap-2">
-                <button class="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 openRecomendacionModal"
-                    data-nombre="<%= usuario.nombreestudiante %>" data-id="<%= usuario.idestudiante %>">
+                <button
+                    class="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 openRecomendacionModal"
+                    data-nombre="<%= usuario.nombreestudiante %>"
+                    data-id="<%= usuario.idestudiante %>">
                     <i class="fa-regular fa-folder"></i>
                 </button>
                 <a href="/admin/editarEstudiante/<%= usuario.idestudiante %>" class="bg-green-500 text-white p-2 rounded-md hover:bg-green-600">
@@ -43,7 +69,7 @@
     </div>
 </div>
 
-
+<!-- ESTA FUNCION ES PARA BUSCAR ENTRE USUARIOS -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('searchInput');
@@ -63,6 +89,7 @@
         });
     });
 </script>
+
 
 
     <!-- Modal Registro -->
@@ -178,8 +205,7 @@
         height: 1rem;
     }
     </style>
-
-
+    
     <!-- Modal Recomendación -->
     <div id="recomendacionModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50" role="dialog" aria-modal="true">
         <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-8 relative">
@@ -187,15 +213,14 @@
                 <i class="fas fa-times"></i>
             </button>
             <h1 class="text-xl font-semibold text-center text-white bg-indigo-900 py-2 rounded-md">Recomendación</h1>
-            <form class="mt-6 space-y-4" action="docente/registrarRecomendacion/" method="post">
+            <form id="formRecomendacion" class="mt-6 space-y-4" method="POST" action="/docente/registrarNuevaRecomendacion">
                 <div>
                     <label for="estudiante" class="block text-sm font-medium text-gray-700">Estudiante</label>
                     <input type="text" id="estudiante" name="estudiante"
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         readonly />
+                    <input type="hidden" id="estudianteId" name="estudianteId" value=""/>
                 </div>
-                <input type="hidden" id="estudianteId" name="estudianteId" />
-                <input type="hidden" id="docenteId" name="docenteId" />
                 <div>
                     <label for="recomendacion" class="block text-sm font-medium text-gray-700">Recomendación</label>
                     <textarea id="recomendacion" rows="4" name="recomendacion"
@@ -214,70 +239,102 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const modal = document.getElementById('modal');
-            const openModal = document.getElementById('openModal');
-            const closeModal = document.getElementById('closeModal');
 
-            const recomendacionModal = document.getElementById('recomendacionModal');
-            const openRecomendacionButtons = document.querySelectorAll('.openRecomendacionModal');
-            const closeRecomendacionModal = document.getElementById('closeRecomendacionModal');
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const recomendacionModal = document.getElementById('recomendacionModal');
+    const openRecomendacionButtons = document.querySelectorAll('.openRecomendacionModal');
+    const closeRecomendacionModal = document.getElementById('closeRecomendacionModal');
 
-            // Abrir/Cerrar Modal Registro
-            openModal?.addEventListener('click', () => modal.classList.remove('hidden'));
-            closeModal?.addEventListener('click', () => modal.classList.add('hidden'));
+    openRecomendacionButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const nombre = button.getAttribute('data-nombre');
+            const id = button.getAttribute('data-id');
 
-            // Abrir Modal Recomendación
-            openRecomendacionButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const nombre = button.getAttribute('data-nombre');
-                    const id = button.getAttribute('data-id');
-                    document.getElementById('estudiante').value = nombre;
-                    document.getElementById('estudianteId').value = id;
-                    recomendacionModal.classList.remove('hidden');
+            console.log("Abrir modal con:", nombre, id);  // ✅ Verifica en consola
 
+            document.getElementById('estudiante').value = nombre;
+            document.getElementById('estudianteId').value = id;
+
+            recomendacionModal.classList.remove('hidden');
+
+            const recomendacionesContainer = document.getElementById('recomendaciones');
+            recomendacionesContainer.innerHTML = "";
+            fetch('/docente/verRecomendaciones/' + id)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Recomendaciones recibidas:', data);
                     const recomendacionesContainer = document.getElementById('recomendaciones');
                     recomendacionesContainer.innerHTML = "";
+                    data.forEach(rec => {
+                        const fecha = rec.fecha ? new Date(rec.fecha).toISOString().split('T')[0] : '';
 
-                    fetch('/recomendaciones/' + id)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.recomendaciones.forEach(rec => {
-                                recomendacionesContainer.innerHTML += `
-                                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-md">
-                                        <p class="text-sm font-medium text-gray-700">${rec.fecha}</p>
-                                        <p class="text-sm text-gray-600">${rec.descripcion}</p>
-                                    </div>`;
-                            });
-                        })
-                        .catch(error => console.error('Error al obtener recomendaciones:', error));
-                });
-            });
+                        recomendacionesContainer.innerHTML += `
+                            <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-md">
+                                <p class="text-sm font-medium text-gray-700">${fecha}</p>
+                                <p class="text-sm text-gray-600">${rec.descripcion}</p>
+                            </div>`;
+                    });
+                })
+                .catch(error => console.error('Error al obtener recomendaciones:', error));
+        });
+    });
 
-            // Cerrar Modal Recomendación
-            closeRecomendacionModal?.addEventListener('click', () => {
-                recomendacionModal.classList.add('hidden');
-            });
+    closeRecomendacionModal?.addEventListener('click', () => {
+        recomendacionModal.classList.add('hidden');
+    });
 
-            // Cerrar modales haciendo clic fuera del contenido
-            window.addEventListener('click', (event) => {
-                if (event.target === modal) modal.classList.add('hidden');
-                if (event.target === recomendacionModal) recomendacionModal.classList.add('hidden');
-            });
+    window.addEventListener('click', (event) => {
+        if (event.target === recomendacionModal) {
+            recomendacionModal.classList.add('hidden');
+        }
+    });
+});
+</script>
 
-            // Búsqueda en tiempo real
-            const searchInput = document.getElementById('searchInput');
-            const userCards = document.querySelectorAll('.user-card');
 
-            searchInput?.addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase();
-                userCards.forEach(card => {
-                    const nombre = card.querySelector('.usuario-nombre').textContent.toLowerCase();
-                    card.style.display = nombre.includes(query) ? 'flex' : 'none';
-                });
+
+<!-- ESTO ELIMINA AL ESTUDIANTE -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const deleteButtons = document.querySelectorAll('.deleteButton');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const estudianteId = button.getAttribute('data-id');
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Esta acción eliminará al estudiante permanentemente.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/docente/eliminarEstudiante/${estudianteId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error al eliminar el estudiante');
+                        }
+                        Swal.fire('¡Eliminado!', 'El estudiante ha sido eliminado.', 'success')
+                        .then(() => {
+                            // Recargar la página o eliminar el elemento del DOM
+                            location.reload();
+                        });
+                    })
+                }
             });
         });
-    </script>
+    });
+});
+</script>
+
 </div>

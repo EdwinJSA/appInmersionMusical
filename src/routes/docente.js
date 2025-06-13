@@ -7,6 +7,7 @@ router.get('/grupos', (req, res) => {
     session: {
       username: req.session.username,
       userType: req.session.tipoUsuario
+      
     },
     grupos: [
       { id: 1, nombre: 'Matemáticas' },
@@ -32,6 +33,27 @@ router.get('/documentos', (req, res) => {
             { id: 2, nombre: 'Grupo B' }
         ]
     });
+});
+
+router.delete('/eliminarEstudiante/:id', async (req, res) => {
+    const estudianteId = req.params.id;
+    console.log(`Eliminar estudiante con ID: ${estudianteId}`);
+    await consultaDocente.eliminarEstudiante(estudianteId);
+    res.json({ message: `Estudiante con ID ${estudianteId} eliminado correctamente.` });
+});
+
+router.post('/registrarNuevaRecomendacion', async (req, res) => {
+    const { estudianteId, estudiante, recomendacion }  = req.body;
+    //console.log(`Registrar nueva recomendación: ${estudianteId}, ${estudiante}, ${recomendacion}`);
+    await consultaDocente.agregarNuevaRecomendacion(estudianteId, recomendacion);
+    res.direct(`/verRecomendaciones/${estudianteId}`);
+});
+
+router.get('/verRecomendaciones/:id', async (req, res) => {
+    const estudianteId = req.params.id;
+    const recomendaciones = await  consultaDocente.obtenerRecomendacionesPorEstudiante(estudianteId);
+    console.table(recomendaciones);
+    res.json(recomendaciones);
 });
 
 router.get('/estCurso', async (req, res) => {
@@ -70,5 +92,7 @@ router.get('/:correo', (req, res) => {
         },
     });
 });
+
+
 
 module.exports = router;
