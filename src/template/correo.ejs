@@ -47,7 +47,7 @@
     <p class="text-sm font-light text-gray-500 pb-4">
       Complete el formulario a continuación.
     </p>
-    <form action="/enviarCorreo" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
+    <form action="/mail/enviarCorreo" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
       <div>
         <label for="idOrigen" class="block text-sm font-medium text-gray-700" disable>
           Origen
@@ -66,7 +66,7 @@
           <option value="">-------</option>
           <% if (session.userType === 'docente') { %>
             <% destino.forEach(estudiante => { %>
-              <option value="<%= estudiante.idUsuario %>"><%= estudiante.nombre %></option>
+              <option value="<%= estudiante.idestudiante %>"><%= estudiante.nombreestudiante %></option>
             <% }) %>
           <% } %>
           <% if (session.userType === 'estudiante') { %>

@@ -1,7 +1,6 @@
 //src/controllers/usuario.js
 const pool = require('../config/conexion_db');
 
-
 const eliminarEstudiante = async (estudianteId) => {
     const query = `
         DELETE FROM estudiante
@@ -92,11 +91,29 @@ const alumnosRegisrados = async() => {
     return result.rows;
 }
 
+//await consultaDocente.enviarCorreo(idOrigen, idDestino, asunto, cuerpo, archivo_url);
+const enviarCorreo = async (origen, idDestino, asunto, cuerpo, archivo_url) => {
+    const queryDocente = `
+        SELECT id FROM Usuario WHERE username = $1 AND usertype = 'DOCENTE'
+    `;
+    const valuesDocente = [origen];
+    const resultDocente = await pool.query(queryDocente, valuesDocente);
+    const idOrigen = resultDocente.rows[0].id;
+
+    const query = `
+        INSERT INTO correos (idorigen, iddestino, asunto, cuerpo, linkarchivo)
+        VALUES ($1, $2, $3, $4, $5)
+    `;
+    const values = [idOrigen, idDestino, asunto, cuerpo, archivo_url];
+    await pool.query(query, values);
+};
+
 module.exports = { 
     alumnosCursoPorDocente,
     alumnosRegisrados,
     RecuperarIdDocente,
     agregarNuevaRecomendacion,
     obtenerRecomendacionesPorEstudiante,
-    eliminarEstudiante
+    eliminarEstudiante,
+    enviarCorreo
 };

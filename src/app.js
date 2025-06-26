@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const expressLayouts = require('express-ejs-layouts');
+const fs = require('fs');
 
 require('dotenv').config();
 require('./config/conexion_db');
@@ -45,7 +46,13 @@ const correoRoutes = require('./routes/correo');
 // Importar middleware de sesión personalizado
 const verificarSesion = require('./middlewares/auth');
 
+const correoDir = path.join(__dirname, '../../public/mails');
+if (!fs.existsSync(correoDir)) {
+  fs.mkdirSync(correoDir, { recursive: true });
+}
+
 // Rutas públicas
+app.use('/correos', express.static(correoDir));
 app.use('/', indexRoutes);
 app.use('/', loginRoutes);
 
