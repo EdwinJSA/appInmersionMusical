@@ -1,91 +1,121 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="shortcut icon" href="/images/logo.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="/css/style.css" />
-  <title>Inmersión Musical App</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="/images/logo.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <title>Inmersión Musical App</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
 
-
-<body>
-<section class="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
-  <div class="flex flex-col w-full max-w-md p-8 sm:p-10 lg:p-12 bg-white rounded-2xl shadow-xl">
-    <div class="flex items-center gap-3 pb-4">
-      <img src="images/logo.png" alt="Logo" class="w-12 h-12" />
-      <h1 class="text-2xl sm:text-3xl font-bold text-sky-900">Inmersión Musical</h1>
-    </div>
-    <p class="text-sm font-light text-gray-500 pb-8">Inicio de Sesión</p>
-
-    <form method="POST" action="/verificarUsuario" class="flex flex-col gap-6">
-      <div>
-        <label for="username" class="block text-sm font-medium text-gray-700 text-sky-900">Usuario (Correo)</label>
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-            <i class="fa fa-user"></i>
-          </span>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            required
-            placeholder="Correo Electrónico"
-            class="p-2 pl-10 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value=""
-          />
-        </div>
-      </div>
-
-      <div>
-        <label for="password" class="block text-sm font-medium text-gray-700 text-sky-900">Contraseña</label>
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 pr-5">
-            <i class="fa fa-lock"></i>
-          </span>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            required
-            placeholder="********"
-            class="p-2 pl-10 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label for="tipoUsuario" class="block text-sm font-medium text-gray-700 text-sky-900">Tipo de Usuario</label>
-        <select
-          name="tipoUsuario"
-          id="tipoUsuario"
-          required
-          class="p-2 pl-10 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="ADMIN">Administrador</option>
-          <option value="DOCENTE">Docente</option>
-          <option value="ESTUDIANTE">Estudiante</option>
-        </select>
-      </div>
-
-      <button
-        type="submit"
-        class="w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-3 transition duration-150 ease-in-out"
+  <body>
+    <section
+      class="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8"
+    >
+      <div
+        class="flex flex-col w-full max-w-md p-8 sm:p-10 lg:p-12 bg-white rounded-2xl shadow-xl"
       >
-        Login
-      </button>
-    </form>
+        <div class="flex items-center gap-3 pb-4">
+          <img src="images/logo.png" alt="Logo" class="w-12 h-12" />
+          <h1 class="text-2xl sm:text-3xl font-bold text-sky-900">
+            Inmersión Musical
+          </h1>
+        </div>
+        <p class="text-sm font-light text-gray-500 pb-8">Inicio de Sesión</p>
 
+        <form
+          method="POST"
+          action="/verificarUsuario"
+          class="flex flex-col gap-6"
+        >
+          <div>
+            <label
+              for="username"
+              class="block text-sm font-medium text-gray-700 text-sky-900"
+              >Usuario (Correo)</label
+            >
+            <div class="relative">
+              <span
+                class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"
+              >
+                <i class="fa fa-user"></i>
+              </span>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                required
+                placeholder="Correo Electrónico"
+                class="p-2 pl-10 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value=""
+              />
+            </div>
+          </div>
 
-    <p class="text-sm text-gray-600 flex items-center gap-1 mt-5">
-      Hola,
-      <a href="#" class="font-medium text-blue-500 hover:text-blue-700 transition duration-200">
-        ¿Olvidaste tu contraseña?
-      </a>
-    </p>
-  </div>
-</section>
-</body>
+          <div>
+            <label
+              for="password"
+              class="block text-sm font-medium text-gray-700 text-sky-900"
+              >Contraseña</label
+            >
+            <div class="relative">
+              <span
+                class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 pr-5"
+              >
+                <i class="fa fa-lock"></i>
+              </span>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                required
+                placeholder="********"
+                class="p-2 pl-10 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="tipoUsuario"
+              class="block text-sm font-medium text-gray-700 text-sky-900"
+              >Tipo de Usuario</label
+            >
+            <select
+              name="tipoUsuario"
+              id="tipoUsuario"
+              required
+              class="p-2 pl-10 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="ADMIN">Administrador</option>
+              <option value="DOCENTE">Docente</option>
+              <option value="ESTUDIANTE">Estudiante</option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-3 transition duration-150 ease-in-out"
+          >
+            Login
+          </button>
+        </form>
+
+        <p class="text-sm text-gray-600 flex items-center gap-1 mt-5">
+          Hola,
+          <a
+            href="/restablecer"
+            class="font-medium text-blue-500 hover:text-blue-700 transition duration-200"
+          >
+            ¿Olvidaste tu contraseña?
+          </a>
+        </p>
+      </div>
+    </section>
+  </body>
 </html>
