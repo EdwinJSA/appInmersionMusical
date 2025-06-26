@@ -3,7 +3,6 @@ const router = express.Router();
 const pool = require("../config/conexion_db");
 const crypto = require("crypto");
 const enviarCorreoReset = require("../utils/correo");
-const bcrypt = require("bcrypt");
 
 // Mostrar formulario de restablecimiento
 router.get("/restablecer", (req, res) => {
@@ -64,31 +63,26 @@ router.get("/restablecer/:token", async (req, res) => {
   }
 });
 
-// Procesar nueva contraseña
+// Procesar nueva contraseña (sin bcrypt, guarda en texto plano)
 router.post("/restablecer-password", async (req, res) => {
   const { token, password } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const result = await pool.query(
       "UPDATE usuario SET password = $1, reset_token = NULL, token_expira = NULL WHERE reset_token = $2 AND token_expira > NOW()",
-      [hashedPassword, token]
+      [password, token]
     );
 
     if (result.rowCount === 0) {
       return res.send("Token inválido o expirado");
     }
-
-    res.send("Contraseña restablecida correctamente");
   } catch (err) {
     console.error(err);
-    res.send("Error al actualizar la contraseña");
+    return res.send("Error al actualizar la contraseña");
   }
 
   res.render("restablecer", {
-    mensaje: "Revisa tu correo para restablecer tu contraseña.",
+    mensaje: "Contraseña restablecida correctamente.",
   });
 });
-
 module.exports = router;

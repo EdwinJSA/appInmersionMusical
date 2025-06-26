@@ -35,8 +35,13 @@
         <div class="mb-4 p-3 rounded bg-green-100 text-green-800 text-center">
           <%= mensaje %>
         </div>
-        <% } %>
-
+        <a
+          href="/"
+          class="w-full text-center text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-3 transition duration-150 ease-in-out mt-4"
+        >
+          Ir al inicio
+        </a>
+        <% } else { %>
         <form method="POST" action="/enviar-reset" class="flex flex-col gap-6">
           <div>
             <label
@@ -68,8 +73,12 @@
             Reestablecer Contraseña
           </button>
         </form>
+        <% } %>
 
-        <p class="text-sm text-gray-600 mt-5 text-center">Test.</p>
+        <p class="text-sm text-gray-600 mt-5 text-center">
+          Donde las notas se convierten en sueños y cada alumno encuentra su
+          propia melodía..
+        </p>
       </div>
     </section>
   </body>

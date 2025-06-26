@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const enviarCorreoReset = async (emailDestino, token) => {
-  const enlace = `http://localhost:3000/restablecer/${token}`;
+  const enlace = `http://localhost:3030/restablecer/${token}`;
   const opciones = {
     from: `"Inmersión Musical" <${process.env.CORREO_ORIGEN}>`,
     to: emailDestino,
