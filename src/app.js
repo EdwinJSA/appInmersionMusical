@@ -1,8 +1,8 @@
 // app.js
-const express = require('express');
-const path = require('path');
-const session = require('express-session');
-const expressLayouts = require('express-ejs-layouts');
+const express = require("express");
+const path = require("path");
+const session = require("express-session");
+const expressLayouts = require("express-ejs-layouts");
 
 require("dotenv").config();
 require("./config/conexion_db");
@@ -46,11 +46,14 @@ const correoRoutes = require("./routes/correo");
 const restablecerRoutes = require("./routes/restablecer");
 
 // Importar middleware de sesión personalizado
-const verificarSesion = require('./middlewares/auth');
+const verificarSesion = require("./middlewares/auth");
+
+const gruposRouter = require("./routes/grupos");
+app.use("/grupos", gruposRouter);
 
 // Rutas públicas
-app.use('/', indexRoutes);
-app.use('/', loginRoutes);
+app.use("/", indexRoutes);
+app.use("/", loginRoutes);
 
 // Rutas protegidas con sesión
 app.use("/docente", verificarSesion, docenteRoutes);
