@@ -92,11 +92,44 @@ const alumnosRegisrados = async() => {
     return result.rows;
 }
 
+//await consultaDocente.enviarCorreo(idOrigen, idDestino, asunto, cuerpo, archivo_url);
+const enviarCorreo = async (origen, idDestino, asunto, cuerpo, archivo_url) => {
+    const queryDocente = `
+        SELECT id FROM Usuario WHERE username = $1 AND usertype = 'DOCENTE'
+    `;
+    const valuesDocente = [origen];
+    const resultDocente = await pool.query(queryDocente, valuesDocente);
+    const idOrigen = resultDocente.rows[0].id;
+
+    const query = `
+        INSERT INTO correos (idorigen, iddestino, asunto, cuerpo, linkarchivo)
+        VALUES ($1, $2, $3, $4, $5)
+    `;
+    const values = [idOrigen, idDestino, asunto, cuerpo, archivo_url];
+    await pool.query(query, values);
+};
+
+
+const listaDocente = async () => {
+    const query = `
+        SELECT 
+            id, username 
+        FROM 
+            Usuario 
+        WHERE 
+            usertype = 'DOCENTE'
+    `;
+    const result = await pool.query(query);
+    return result.rows; // [{ id, username }, ...]
+};
+
 module.exports = { 
     alumnosCursoPorDocente,
     alumnosRegisrados,
     RecuperarIdDocente,
     agregarNuevaRecomendacion,
     obtenerRecomendacionesPorEstudiante,
-    eliminarEstudiante
+    eliminarEstudiante,
+    enviarCorreo,
+    listaDocente
 };

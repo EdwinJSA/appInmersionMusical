@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const consultaDocente = require('../controllers/consultaDocente');
 
-router.get('/grupos', (req, res) => {
+
+// 
+router.get('/grupos', async (req, res) => {
+    const listaDocente = await consultaDocente.listaDocente();
+
   res.render('grupos', {
     session: {
       username: req.session.username,

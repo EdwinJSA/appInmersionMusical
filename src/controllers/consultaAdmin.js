@@ -1,6 +1,7 @@
 const pool = require('../config/conexion_db');
 
 
+
 /*
 consultasAdmin.crearNuevoEstudiante(
     nombre,
@@ -56,8 +57,28 @@ const crearNuevoUsuario = async (correo, password, tipoUsuario) => {
     return result.rows[0].id; 
 };
 
+const recuperarIdUsuarioPorCorreo = async (correo) => {
+    const query = `
+        SELECT id FROM Usuario WHERE username = $1
+    `;
+    const values = [correo];
+    const result = await pool.query(query, values);
+    return result.rows[0].id;
+};
+
+const obtenerCorreosPorIdUsuario = async (idUsuario) => {
+    const query = `SELECT * FROM Correos WHERE idorigen = $1 OR iddestino = $1
+    ORDER BY fecha DESC`;
+    const values = [idUsuario];
+    const result = await pool.query(query, values);
+    return result.rows;
+};
+
+
 module.exports = {
     crearNuevoEstudiante,
     crearNuevoUsuario,
-    obtenerEstudiantePorId
+    obtenerEstudiantePorId,
+    obtenerCorreosPorIdUsuario,
+    recuperarIdUsuarioPorCorreo
 };
