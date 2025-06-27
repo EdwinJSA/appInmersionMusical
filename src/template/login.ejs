@@ -33,6 +33,11 @@
           action="/verificarUsuario"
           class="flex flex-col gap-6"
         >
+          <% if (typeof mensaje !== "undefined" && mensaje) { %>
+          <div class="mb-4 p-3 rounded bg-red-100 text-red-800 text-center">
+            <%= mensaje %>
+          </div>
+          <% } %>
           <div>
             <label
               for="username"

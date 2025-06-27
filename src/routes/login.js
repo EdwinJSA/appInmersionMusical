@@ -22,7 +22,11 @@ router.post("/verificarUsuario", async (req, res) => {
     const usuario = await validarUsuario(username, password, tipoUsuario);
 
     if (!usuario) {
-      return res.status(401).send("Credenciales inválidas");
+      //supuestamente aqui renderiza el login con el mensaje
+      return res.render("login", {
+        mensaje: "Credenciales inválidas",
+        layout: false,
+      });
     }
 
     // ✅ Asignar propiedades individuales a la sesión (NO sobrescribirla)
