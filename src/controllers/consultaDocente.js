@@ -1,7 +1,6 @@
 //src/controllers/usuario.js
 const pool = require('../config/conexion_db');
 
-
 const eliminarEstudiante = async (estudianteId) => {
     const query = `
         DELETE FROM estudiante

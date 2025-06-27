@@ -59,6 +59,7 @@
           <% if (session.userType === 'docente') { %>
             <% destino.forEach(estudiante => { %>
               <option value="<%= estudiante.idestudiante %>"><%= estudiante.nombreestudiante %></option>
+              <option value="<%= estudiante.idestudiante %>"><%= estudiante.nombreestudiante %></option>
             <% }) %>
           <% } else if (session.userType === 'estudiante') { %>
             <option value="1">Profesor Sergio</option>
