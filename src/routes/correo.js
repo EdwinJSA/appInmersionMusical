@@ -1,44 +1,57 @@
 // src/routes/correo.js
 const express = require('express');
+const multer = require('multer');
 const router = express.Router();
+const consultaDocente = require('../controllers/consultaDocente');
+const consultaAdmin = require('../controllers/consultaAdmin');
+const path = require("path");
+const { table } = require('console');
+const correoDir = path.join(__dirname, '../../public/mails');
 
-router.get('/:username', (req, res) => {
+const storageCorreo = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, correoDir);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const fechaHora = new Date().toISOString().replace(/[-:.TZ]/g, '');
+    const nombreFinal = `CORREO_${fechaHora}${ext}`;
+    cb(null, nombreFinal);
+  }
+});
+
+const uploadCorreo = multer({ storage: storageCorreo });
+
+
+router.post('/enviarCorreo', uploadCorreo.single('linkArchivo'), async (req, res) => {
+  const { idOrigen, idDestino, asunto, cuerpo } = req.body;
+
+  const archivo_url = req.file ? `/mails/${req.file.filename}` : null;
+
+  await consultaDocente.enviarCorreo(idOrigen, idDestino, asunto, cuerpo, archivo_url);
+  return res.redirect(`/docente/mails`);
+});
+
+
+
+router.get('/:username', async (req, res) => {
     // correo recuperado para ver mensajes del usuario
-  const username = req.params.username;
-  console.log(`Correo de ${username}`);
-
-  // Datos ficticios
-  const emails = [
-    {
-      id: 1,
-      asunto: 'Reunión importante',
-      idOrigen: { id: 10, username: 'profesor1' },
-      fecha: '2025-06-04',
-    },
-    {
-      id: 2,
-      asunto: 'Tarea entregada',
-      idOrigen: { id: 20, username: 'estudiante1' },
-      fecha: '2025-06-03',
-    },
-  ];
-
-  const origen = 10; // id del usuario que envía el correo (ejemplo)
-  const userType = 'profesor'; // o 'estudiante'
-
-  const destino = [
-    { idUsuario: 101, nombre: 'Alumno Juan' },
-    { idUsuario: 102, nombre: 'Alumno María' },
-  ];
+  const origen = await consultaAdmin.recuperarIdUsuarioPorCorreo(req.params.username);
   
+  console.log('----> ', origen); // es un entero
+  const destino = await consultaDocente.alumnosCursoPorDocente(origen);
+  const emails = await consultaAdmin.obtenerCorreosPorIdUsuario(origen);
+  console.table(emails);
+
+
   res.render('correo', {
     emails,
     origen,
     destino,
     session: {
-      username: req.session.username,       // o el dato correcto que tengas
-      userType: req.session.tipoUsuario,       // usa el mismo campo que usas en otras vistas
-      userbool: true                        // si quieres agregar esta bandera como en docente
+      username: req.session.username,    
+      userType: req.session.tipoUsuario,   
+      userbool: true
     }
   });
 
