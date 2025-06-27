@@ -57,6 +57,7 @@ app.use("/docente", verificarSesion, docenteRoutes);
 app.use("/estudiante", verificarSesion, estudianteRoutes);
 app.use("/admin", verificarSesion, adminRoutes);
 app.use("/mail", verificarSesion, correoRoutes);
+app.use("/restablecer", restablecerRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {

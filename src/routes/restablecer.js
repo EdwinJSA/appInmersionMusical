@@ -4,12 +4,12 @@ const pool = require("../config/conexion_db");
 const crypto = require("crypto");
 const enviarCorreoReset = require("../utils/correo");
 
-// Mostrar formulario de restablecimiento
-router.get("/restablecer", (req, res) => {
+// Mostrar formulario de restablecimiento (GET /restablecer)
+router.get("/", (req, res) => {
   res.render("restablecer");
 });
 
-// Enviar correo de restablecimiento
+// Enviar correo de restablecimiento (POST /restablecer/enviar-reset)
 router.post("/enviar-reset", async (req, res) => {
   const { username } = req.body;
 
@@ -24,7 +24,7 @@ router.post("/enviar-reset", async (req, res) => {
     }
 
     const token = crypto.randomBytes(20).toString("hex");
-    const tokenExpira = new Date(Date.now() + 3600000);
+    const tokenExpira = new Date(Date.now() + 3600000); // 1 hora
 
     await pool.query(
       "UPDATE usuario SET reset_token = $1, token_expira = $2 WHERE username = $3",
@@ -42,8 +42,8 @@ router.post("/enviar-reset", async (req, res) => {
   }
 });
 
-// Mostrar formulario para nueva contraseña
-router.get("/restablecer/:token", async (req, res) => {
+// Mostrar formulario para nueva contraseña (GET /restablecer/:token)
+router.get("/:token", async (req, res) => {
   const { token } = req.params;
 
   try {
@@ -63,7 +63,7 @@ router.get("/restablecer/:token", async (req, res) => {
   }
 });
 
-// Procesar nueva contraseña (sin bcrypt, guarda en texto plano)
+// Procesar nueva contraseña (POST /restablecer/restablecer-password)
 router.post("/restablecer-password", async (req, res) => {
   const { token, password } = req.body;
 
@@ -85,4 +85,5 @@ router.post("/restablecer-password", async (req, res) => {
     mensaje: "Contraseña restablecida correctamente.",
   });
 });
+
 module.exports = router;
