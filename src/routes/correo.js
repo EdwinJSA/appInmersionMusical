@@ -1,7 +1,6 @@
 // src/routes/correo.js
 const express = require('express');
 const multer = require('multer');
-const multer = require('multer');
 const router = express.Router();
 const consultaDocente = require('../controllers/consultaDocente');
 const consultaAdmin = require('../controllers/consultaAdmin');
